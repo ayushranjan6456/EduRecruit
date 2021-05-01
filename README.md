@@ -25,5 +25,5 @@ Edurecreuit helps the organization/company to get a better understanding of the 
 - Python
 - Flask
 - Streamlit
-- Sklearn, pandas, Numpy
+- Sklearn, pandas, numpy
 - NLP for summarizer
