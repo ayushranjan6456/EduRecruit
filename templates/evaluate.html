@@ -1,0 +1,280 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+        <title>EduRecruit</title>
+        <meta content="" name="description">
+        <meta content="" name="keywords">
+        <!-- Favicons -->
+        <link href="{{ url_for('static', filename='img/favicon.png') }}" rel="icon">
+        <link href="{{ url_for('static', filename='img/apple-touch-icon.png') }}" rel="apple-touch-icon">
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Roboto:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+        <!-- Vendor CSS Files -->
+        <link href="{{ url_for('static', filename='vendor/aos/aos.css')}}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='vendor/bootstrap-icons/bootstrap-icons.css')}}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='vendor/boxicons/css/boxicons.min.css')}}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='vendor/glightbox/css/glightbox.min.css')}}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='vendor/swiper/swiper-bundle.min.css')}}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/eval.css') }}" rel="stylesheet">
+    </head>
+    <body>
+        <header id="header" class="fixed-top ">
+            <div class="container d-flex align-items-center justify-content-between">
+                <h1 class="logo">
+                    <a href="/">EduRecruit</a>
+                </h1>
+                <nav id="navbar" class="navbar">
+                    <ul>
+                        <li>
+                            <a class="nav-link scrollto active" href="/">Home</a>
+                        </li>
+                        <li>
+                            <a class="nav-link scrollto" href="#services">Services</a>
+                        </li>
+                        <li>
+                            <a class="nav-link scrollto" href="#contact">Contact</a>
+                        </li>
+                        <li>
+                            <a class="getstarted scrollto" href="/summarise">Resume Summariser</a>
+                        </li>
+                    </ul>
+                    <i class="bi bi-list mobile-nav-toggle"></i>
+                </nav>
+                <!-- .navbar -->
+            </div>
+        </header>
+        <!-- End Header -->
+        <!-- ======= Hero Section ======= -->
+        <section id="hero" class="d-flex align-items-center">
+            <div class="container-fluid" data-aos="fade-up">
+                <div class="row justify-content-center">
+                    <div class="container">
+                        <form action="/evaluate" method="post" enctype="multipart/form-data">
+                            <div class="maincontent">
+                                <div class="file-upload-wrapper">
+                                    <div class="file-upload-wrapper-title">
+                                        <div>
+                                            <a href="https://{{name}}" target="_blank">{{name}}</a>
+                                        </div>
+                                        <hr>
+                                    </div>
+                                    <button class="file-upload-wrapper-title__btn">
+                                        Upload Now
+                                    </button>
+                                    <div class="box-fileupload">
+                                        <input
+                                            type="file"
+                                            id="fileId"
+                                            class="file-upload-input"
+                                            name="file"
+                                            multiple
+                                        >
+                                        <label for="fileId" class="file-upload-btn"></label>
+                                        <p class="box-fileupload__lable">Drop files here to upload</p>
+                                    </div>
+                                    <div class="error-wrapper"></div>
+                                    <div class="image-previwe"></div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- End Hero -->
+        <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+        <script>
+            (function ($) {
+    $.fn.fileUplodPlugins = function (option) {
+        let allData = []
+        let settings = $.extend({
+            inputFileUpload: "#fileId",
+            ValidType: ['image/jpeg', 'image/png', ],
+            btnUpload: ".file-upload-wrapper-title__btn",
+            deleteImageBtn: ".image-previwe__delete-btn",
+            boxFileUploadPreviwe: '.image-previwe',
+            boxErrorPreviwe: '.error-wrapper',
+        }, option)
+        
+
+        function removeElement(id) {
+
+            allData = allData.filter(itme => {
+                return itme.id != id
+            })
+        }
+        $(document).ready(function () {
+            const removeBtn = (id) => {
+                let span = document.createElement('span');
+                span.setAttribute('class', 'image-previwe__delete-btn');
+                span.setAttribute('data-id', id);
+                return span;
+            }
+            const previweNameImage = (name) => {
+                let div = document.createElement('div');
+                div.setAttribute('class', "image-previwe__hover");
+                let p = document.createElement('p');
+                p.innerHTML = name;
+                div.appendChild(p)
+                return div;
+            }
+            const CreatImagePreview = (image, id, noImage = null) => {
+                let div = document.createElement('div');
+                div.setAttribute("class", "image-previwe__image");
+                if (noImage != null) {
+                    div.setAttribute("style", `background-image:url(${noImage})`);
+                } else {
+                    div.setAttribute("style", `background-image:url(${image})`);
+                }
+                div.appendChild(removeBtn(id));
+                div.appendChild(previweNameImage(id));
+                return div;
+            }
+            const createError = () => {
+                let div = document.createElement('div');
+                div.setAttribute("class", 'error-format');
+                div.innerHTML = "File Format Is Not Valid";
+                return div;
+            }
+            let checkTypeFiles = (file) => {
+                let validation = {
+                    isValid: false,
+                    preViwe: null,
+                }
+
+                settings.ValidType.forEach((data, index) => {
+
+                    if (file.type == data) {
+                        file.previewimg = null;
+                        validation.isValid = true;
+                        validation.preViwe = file;
+                        switch (true) {
+                            case file.type == 'application/pdf':
+                                file.previewimg = 'assets/img/pdf-icon.png'
+                                validation.preViwe = file;
+                                break;
+                            case file.type == 'text/plain':
+                                file.previewimg = 'assets/img/txt-icon.png';
+                                validation.preViwe = file;
+                                break;
+                        }
+                    }
+                })
+
+                return validation;
+            }
+
+            function uploadClick(input) {
+                let inputValue = Object.values(input.files)
+                if (input.files.length) {
+                    inputValue.forEach(element => {
+                        let isElementVaild = checkTypeFiles(element)
+
+                        if (isElementVaild.isValid) {
+                            allData.push({
+                                id: element.lastModified,
+                                file: element
+                            });
+                            renderImageData(isElementVaild.preViwe);
+                        } else {
+                            $(settings.boxErrorPreviwe).append(createError());
+                            setTimeout(() => {
+                                $('.error-format').fadeOut("slow")
+                            }, 2500);
+                        }
+                    });
+                }
+            }
+
+            function DragAndDropUpload(input) {
+                let inputValue = Object.values(input)
+                if (input.length) {
+                    inputValue.forEach((element) => {
+                        let isElementVaild = checkTypeFiles(element)
+
+                        if (isElementVaild.isValid) {
+                            allData.push({
+                                id: element.lastModified,
+                                file: element
+                            });
+                            renderImageData(isElementVaild.preViwe);
+                        } else {
+                            settings.boxErrorPreviwe.appendChild(createError());
+                        }
+                    });
+                }
+            }
+
+            function renderImageData(arrayItme) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    let previweTag = CreatImagePreview(e.target.result, arrayItme.lastModified, arrayItme.previewimg);
+                    $(settings.boxFileUploadPreviwe).append(previweTag);
+                }
+
+                reader.readAsDataURL(arrayItme);
+            };
+            $(settings.inputFileUpload).change(function () {
+                uploadClick(this);
+            });
+
+            $("html").on("dragover", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            });
+            $('.box-fileupload').on('dragenter', function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+                $(".box-fileupload__lable").text("Drop");
+            });
+            $('.box-fileupload').on('drop', function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+
+                $(".box-fileupload__lable").text("Upload");
+
+                var file = e.originalEvent.dataTransfer.files;
+
+                DragAndDropUpload(file)
+            });
+        })
+        $(settings.btnUpload).click(function () {
+
+        })
+        $(document).on('click', settings.deleteImageBtn, function () {
+            let dataId = $(this).attr("data-id")
+            removeElement(dataId);
+            $(this).parent().remove()
+        });
+        return this;
+
+    }
+}(jQuery))
+        </script>
+        <script>
+             
+        $("html").fileUplodPlugins({
+           inputFileUpload: "#fileId",
+            ValidType: ['image/jpeg', 'image/png','application/pdf'],
+            btnUpload: ".file-upload-wrapper-title__btn",
+            deleteImageBtn: ".image-previwe__delete-btn",
+            boxFileUploadPreviwe: '.image-previwe',
+            boxErrorPreviwe: '.error-wrapper',
+        })
+        </script>
+    </body>
+</html>
+<!-- Vendor JS Files -->
+<script src="{{ url_for('static', filename='vendor/aos/aos.js')}}"></script>
+<script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+<script src="{{ url_for('static', filename='vendor/glightbox/js/glightbox.min.js')}}"></script>
+<script src="{{ url_for('static', filename='vendor/isotope-layout/isotope.pkgd.min.js')}}"></script>
+<script src="{{ url_for('static', filename='vendor/php-email-form/validate.js')}}"></script>
+<script src="{{ url_for('static', filename='vendor/purecounter/purecounter.js')}}"></script>
+<script src="{{ url_for('static', filename='vendor/swiper/swiper-bundle.min.js')}}"></script>
+<!-- Template Main JS File -->
+<script src="{{ url_for('static', filename='js/main.js')}}"></script>
