@@ -17,7 +17,7 @@ Edurecreuit helps the organization/company to get a better understanding of the 
 
 # Challenges we ran into 🙌
 1. Deploying the ML model, integrating the pkl file into the web app
-2. Creating a summary of the resume, extracting the text of the user's resume, and creating extractive summary text
+2. Creating a summary of the resume, extracting the text of the user's resume, and creating extractive summary text.
 
 # Tech Stack 📚
 
